@@ -36,11 +36,14 @@ makePrisms ''Updt
 
 ---
 
-data Upgr = Upgr_Sel (Maybe Cmd)
-          | Upgr_Mod Updt
+data Upgr = Upgr_CmdMay (Maybe Cmd)
+          | Upgr_Updt Updt
   deriving (Show, Read, Eq, GHC.Generic)
 makePrisms ''Upgr
 
+instance Default Upgr where
+  def = Upgr_CmdMay def
+ 
 ----------
 
 data Config = Config { _config_maxMenuItemLength :: Int
@@ -178,8 +181,8 @@ controlTodo (td, mc) = do
       dTodo <- foldDyn stepTodo td eUpdt
 
   let eUpgr = mergeWith const $ 
-        [ fmap (review _Upgr_Sel) eCmdMay
-        , fmap (review _Upgr_Mod) eUpdt
+        [ fmap (review _Upgr_CmdMay) eCmdMay
+        , fmap (review _Upgr_Updt) eUpdt
         ]    -- leftmost
 
   return $ attachDyn dTodo eUpgr
@@ -189,12 +192,12 @@ controlTodo (td, mc) = do
 isUpdtQuit :: (Todo, Upgr) -> Maybe Todo
 isUpdtQuit (td, ug) = 
   either (const Nothing) (const $ Just td) $
-    matching (_Upgr_Mod . _Updt_Quit) ug
+    matching (_Upgr_Updt . _Updt_Quit) ug
 
 ---
 
 todoUpgr :: (t ~ Spider, MonadWidget t m)
-           => (Todo, Maybe Cmd) -> m (Event t (Todo, Upgr))
+         => (Todo, Maybe Cmd) -> m (Event t (Todo, Upgr))
 todoUpgr (td, mc) = do 
   rec let eTodoQ = fmapMaybe isUpdtQuit eTodoUpgr 
 
@@ -255,7 +258,7 @@ dispTodoView (td, v0) = do
          return e
 
 todoView :: (t ~ Spider, MonadWidget t m)
-           => (Todo, View) -> Event t Todo -> m (Event t View)
+         => (Todo, View) -> Event t Todo -> m (Event t View)
 todoView (td0, v0) eTodo = do
   dTodo <- holdDyn td0 eTodo
   rec dTodoView <- combineDyn (,) dTodo dView
@@ -271,8 +274,8 @@ todoView (td0, v0) eTodo = do
 
 dispUpgr :: MonadWidget t m => Upgr -> m ()
 dispUpgr = \case 
-    Upgr_Sel _ -> return ()
-    Upgr_Mod u -> do
+    Upgr_CmdMay _ -> return ()
+    Upgr_Updt u -> do
       el "div" $ el "em" $ text $ "Status update: "
       case u of
         Updt_Quit xs -> do
@@ -299,7 +302,7 @@ main = mainWidget $ el "div" $ do
   _ <- todoView (def, def) eTodo
 
   let eUpgr = fmap snd eTodoUpgr
-  _ <- statusUpdate ((review _Upgr_Sel) def) eUpgr
+  _ <- statusUpdate def eUpgr
 
   return ()
 

@@ -1,0 +1,15 @@
+## reflex-examples
+
+The purpose of this repository is to provide some examples of functional reactive programming (FRP) based on the [Reflex-DOM](https://github.com/ryantrinkle/reflex-dom) library. Follow the instructions at [try-reflex](https://github.com/ryantrinkle/try-reflex), or [here](https://github.com/artuuge/reflex-arc), to install it.
+
+### Todo List
+
+This is a proof of concept FRP implementation of a simple todo list in Reflex. If you have `ghcjs-0.2.0` and `ghc-7.10.2`, then, assuming your reflex sandbox is located at `~/ghcjs-reflex`, it is possible to compile the file into Javascript:
+```
+ghcjs -O2 -j todoListReflex.hs -Wall -package-db ~/ghcjs-reflex/.cabal-sandbox/x86_64-linux-ghcjs-0.2.0-ghc7_10_2-packages.conf.d/
+```
+or to obtain a binary:
+```
+ghc -O2 -j todoListReflex.hs -Wall -package-db ~/ghcjs-reflex/.cabal-sandbox/x86_64-linux-ghc-7.10.2-packages.conf.d/
+```
+This example can be perceived as an illustration of how to organize several interacting widgets which have a *state*. A state of one widget may correspond to a dynamic which is obtained as a fold over an event stemming from another widget. 
