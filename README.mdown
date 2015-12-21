@@ -1,15 +1,18 @@
 ## reflex-examples
 
-The purpose of this repository is to provide some examples of functional reactive programming (FRP) based on the [Reflex-DOM](https://github.com/ryantrinkle/reflex-dom) library. Follow the instructions at [try-reflex](https://github.com/ryantrinkle/try-reflex), or [here](https://github.com/artuuge/reflex-arc), to install it.
+The purpose of this repository is to provide some examples of functional reactive programming (FRP) based on the [Reflex-DOM](https://github.com/ryantrinkle/reflex-dom) library. Follow the instructions at [try-reflex](https://github.com/ryantrinkle/try-reflex), or [here](https://github.com/artuuge/reflex-arc), if you wish to install it. 
+It is possible to checkout the demo(s) directly in a browser at [gh-pages](http://artuuge.github.io/reflex-examples/index.html). 
+
+
 
 ### Todo List
 
-This is a proof of concept FRP implementation of a simple todo list in Reflex. If you have `ghcjs-0.2.0` and `ghc-7.10.2`, then, assuming your reflex sandbox is located at `~/ghcjs-reflex`, it is possible to compile the file into Javascript:
+This is a proof of concept FRP implementation of a simple todo list in Reflex. You may find another todo list from the author(s) of Reflex in the repository [reflex-todomvc](https://github.com/ryantrinkle/reflex-todomvc), or included with try-reflex. In the current example I do not use css files, and the idea is more to test the functions like `widgetHold` and `switchPromptlyDyn`. The file can be compiled into Javascript:
 ```
 ghcjs -O2 -j todoListReflex.hs -Wall -package-db ~/ghcjs-reflex/.cabal-sandbox/x86_64-linux-ghcjs-0.2.0-ghc7_10_2-packages.conf.d/
 ```
-or to obtain a binary:
+or into a binary:
 ```
 ghc -O2 -j todoListReflex.hs -Wall -package-db ~/ghcjs-reflex/.cabal-sandbox/x86_64-linux-ghc-7.10.2-packages.conf.d/
 ```
-This example can be perceived as an illustration of how to organize several interacting widgets which have a *state*. A state of one widget may correspond to a dynamic which is obtained as a fold over an event stemming from another widget. 
+where you need to adjust the path to the package database to match your system. This example can be perceived as an illustration of how to organize several interacting widgets which have a *state*. A state of one widget may correspond to a dynamic which is obtained as a fold over an event stemming from another widget. 
